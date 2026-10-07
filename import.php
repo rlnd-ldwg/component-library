@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-
 require_once __DIR__ . '/db.php';
 
 $db = getDB();
@@ -61,31 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv'])) {
                     try {
                         $db->beginTransaction();
 
-                        // Optional: Tabelle komplett neu
+                        // Optional: empty table first (DELETE keeps the structure and stays inside the transaction)
                         if ($resetTable) {
-                            $db->exec('DROP TABLE IF EXISTS components');
-                            $db->exec("
-                                CREATE TABLE components (
-                                    id INT AUTO_INCREMENT PRIMARY KEY,
-                                    category VARCHAR(50) NULL,
-                                    part_type VARCHAR(100) NULL,
-                                    description VARCHAR(255) NULL,
-                                    part_value VARCHAR(50) NULL,
-                                    footprint VARCHAR(50) NULL,
-                                    mounting VARCHAR(10) NULL,
-                                    quantity INT DEFAULT 0,
-                                    location VARCHAR(100) NULL,
-                                    manufacturer VARCHAR(100) NULL,
-                                    unit_price DECIMAL(10, 4) NULL,
-                                    notes TEXT NULL,
-                                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                                    INDEX idx_category (category),
-                                    INDEX idx_location (location),
-                                    INDEX idx_part_type (part_type),
-                                    INDEX idx_footprint (footprint)
-                                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-                            ");
+                            $db->exec('DELETE FROM components');
                         }
 
                         $cols = array_intersect($allowedColumns, $header);
@@ -155,7 +130,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv'])) {
                         $messages[] = "Import abgeschlossen: $added neu, $updated aktualisiert."
                                     . ($resetTable ? ' (Tabelle wurde vorher geleert.)' : '');
                     } catch (Throwable $e) {
-                        $db->rollBack();
+                        if ($db->inTransaction()) {
+                            $db->rollBack();
+                        }
                         $errors[] = 'Import fehlgeschlagen: ' . $e->getMessage();
                     }
                 } elseif (!$rows) {

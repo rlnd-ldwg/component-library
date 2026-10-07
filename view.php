@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-
 require_once __DIR__ . '/db.php';
 
 $db = getDB();
@@ -21,7 +18,7 @@ if (!$c) {
 
 // Hilfsfunktion für schöne Ausgabe
 function show($v) {
-    return $v === null || $v === '' ? '–' : htmlspecialchars($v);
+    return $v === null || $v === '' ? '–' : htmlspecialchars((string)$v);
 }
 ?>
 <!DOCTYPE html>

@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':part_value'   => trim($_POST['part_value'] ?? '') ?: null,
             ':footprint'    => trim($_POST['footprint'] ?? '') ?: null,
             ':mounting'     => trim($_POST['mounting'] ?? '') ?: null,
-            ':quantity'     => ($_POST['quantity'] ?? '') === '' ? null : (int)$_POST['quantity'],
+            ':quantity'     => ($_POST['quantity'] ?? '') === '' ? 0 : max(0, (int)$_POST['quantity']),
             ':location'     => trim($_POST['location'] ?? '') ?: null,
             ':manufacturer' => trim($_POST['manufacturer'] ?? '') ?: null,
             ':unit_price'   => ($_POST['unit_price'] ?? '') === '' ? null : (float)str_replace(',', '.', $_POST['unit_price']),

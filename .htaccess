@@ -1,0 +1,11 @@
+AuthType Basic
+AuthName "Components"
+AuthUserFile /etc/apache2/.htpasswd
+Require valid-user
+
+Options -Indexes
+
+# These files are only included by PHP, never requested directly
+<FilesMatch "^(config|config\.example|db)\.php$">
+    Require all denied
+</FilesMatch>

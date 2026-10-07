@@ -3,35 +3,20 @@ require_once __DIR__ . '/db.php';
 
 $db = getDB();
 
-$where = [];
-$params = [];
+[$whereSql, $params] = buildFilter($_GET);
 
-if (!empty($_GET['category'])) {
-    $where[] = 'category = :category';
-    $params[':category'] = $_GET['category'];
-}
-if (!empty($_GET['location'])) {
-    $where[] = 'location LIKE :location';
-    $params[':location'] = '%' . $_GET['location'] . '%';
-}
-if (!empty($_GET['search'])) {
-    $where[] = '(part_type LIKE :s1 OR description LIKE :s2 OR part_value LIKE :s3)';
-    $params[':s1'] = '%' . $_GET['search'] . '%';
-    $params[':s2'] = '%' . $_GET['search'] . '%';
-    $params[':s3'] = '%' . $_GET['search'] . '%';
-}
-
-$sql = 'SELECT * FROM components';
-if ($where) {
-    $sql .= ' WHERE ' . implode(' AND ', $where);
-}
-$sql .= ' ORDER BY category, part_type';
-
-$stmt = $db->prepare($sql);
+$stmt = $db->prepare('SELECT * FROM components' . $whereSql . ' ORDER BY category, part_type');
 $stmt->execute($params);
 $components = $stmt->fetchAll();
 
 $categories = $db->query('SELECT DISTINCT category FROM components WHERE category IS NOT NULL ORDER BY category')->fetchAll(PDO::FETCH_COLUMN);
+
+// Pass current filters on to the export so that only the filtered rows are exported
+$exportParams = http_build_query([
+    'search'   => (string)($_GET['search']   ?? ''),
+    'category' => (string)($_GET['category'] ?? ''),
+    'location' => (string)($_GET['location'] ?? ''),
+]);
 ?>
 <!DOCTYPE html>
 <html lang="de">
@@ -50,132 +35,44 @@ $categories = $db->query('SELECT DISTINCT category FROM components WHERE categor
         .filter button { background: #4a5568; color: #fff; border: none; cursor: pointer; }
         .count { color: #666; margin-bottom: 1rem; }
         .low { color: #c53030; font-weight: bold; }
-        
-.btn-row {
-    display: flex;
-    gap: 0.6rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    align-items: center;
-}
-.btn {
-    padding: 0.5rem 1rem;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 4px;
-    display: inline-block;
-    line-height: 1.2;
-    font-size: 0.95rem;
-}
-.btn-add { background: #38a169; }
-.btn-add:hover { background: #2f855a; }
-.btn-export { background: #2b6cb0; }
-.btn-export:hover { background: #2c5282; }
-.btn-import { background: #c53030; }
-.btn-import:hover { background: #9b2c2c; }
-.qty-btn {
-    width: 24px; height: 24px;
-    border: 1px solid #ccc; background: #f7f7f7;
-    cursor: pointer; border-radius: 3px;
-    font-weight: bold;
-}
-.qty-btn:hover { background: #e2e8f0; }
-.qty-value { display: inline-block; min-width: 2.5em; text-align: center; }
 
+        .btn-row { display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
+        .btn { padding: 0.5rem 1rem; color: #fff; text-decoration: none; border-radius: 4px; display: inline-block; line-height: 1.2; font-size: 0.95rem; }
+        .btn-add { background: #38a169; }
         .btn-add:hover { background: #2f855a; }
-        .qty-btn {
-            width: 24px; height: 24px;
-            border: 1px solid #ccc; background: #f7f7f7;
-            cursor: pointer; border-radius: 3px;
-            font-weight: bold;
-        }
+        .btn-export { background: #2b6cb0; }
+        .btn-export:hover { background: #2c5282; }
+        .btn-import { background: #c53030; }
+        .btn-import:hover { background: #9b2c2c; }
+
+        .qty-btn { width: 24px; height: 24px; border: 1px solid #ccc; background: #f7f7f7; cursor: pointer; border-radius: 3px; font-weight: bold; }
         .qty-btn:hover { background: #e2e8f0; }
         .qty-value { display: inline-block; min-width: 2.5em; text-align: center; }
-.btn-row { display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
-.btn { padding: 0.5rem 1rem; color: #fff; text-decoration: none; border-radius: 4px; display: inline-block; }
-.btn-add { background: #38a169; }
-.btn-add:hover { background: #2f855a; }
-.btn-export { background: #2b6cb0; }
-.btn-export:hover { background: #2c5282; }
     </style>
 </head>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.qty-btn').forEach(btn => {
-        btn.addEventListener('click', async () => {
-            const id = btn.dataset.id;
-            const delta = btn.dataset.delta;
-            const span = document.getElementById('qty-' + id);
-            console.log('Klick:', id, delta);   // <-- Debug
-
-            btn.disabled = true;
-            try {
-                const res = await fetch('update_qty.php', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    body: 'id=' + encodeURIComponent(id) + '&delta=' + encodeURIComponent(delta)
-                });
-                console.log('Status:', res.status);  // <-- Debug
-                const text = await res.text();
-                console.log('Antwort:', text);       // <-- Debug
-                const data = JSON.parse(text);
-                if (data.ok) {
-                    span.textContent = data.quantity;
-                    span.parentElement.classList.toggle('low', data.quantity < 5);
-                } else {
-                    alert('Fehler beim Speichern');
-                }
-            } catch (e) {
-                console.error(e);
-                alert('Netzwerkfehler: ' + e.message);
-            } finally {
-                btn.disabled = false;
-            }
-        });
-    });
-});
-</script>
-
 <body>
     <h1>🔧 Bauteil-Inventar</h1>
 
     <form class="filter" method="get">
-        <input type="text" name="search" placeholder="Suchen (Typ, Beschreibung, Wert)..." value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
+        <input type="text" name="search" placeholder="Suchen (Typ, Beschreibung, Wert)..." value="<?= htmlspecialchars((string)($_GET['search'] ?? '')) ?>">
         <select name="category">
             <option value="">Alle Kategorien</option>
             <?php foreach ($categories as $cat): ?>
-                <option value="<?= htmlspecialchars($cat) ?>" <?= ($_GET['category'] ?? '') === $cat ? 'selected' : '' ?>>
+                <option value="<?= htmlspecialchars($cat) ?>" <?= (string)($_GET['category'] ?? '') === $cat ? 'selected' : '' ?>>
                     <?= htmlspecialchars($cat) ?>
                 </option>
             <?php endforeach; ?>
         </select>
-        <input type="text" name="location" placeholder="Lagerort..." value="<?= htmlspecialchars($_GET['location'] ?? '') ?>">
+        <input type="text" name="location" placeholder="Lagerort..." value="<?= htmlspecialchars((string)($_GET['location'] ?? '')) ?>">
         <button type="submit">Filtern</button>
         <a href="index.php">Zurücksetzen</a>
     </form>
 
-    <?php
-    // Aktuelle Filter-Parameter übernehmen, damit der Export gefiltert wird
-    $exportParams = http_build_query([
-        'search'   => $_GET['search']   ?? '',
-        'category' => $_GET['category'] ?? '',
-        'location' => $_GET['location'] ?? '',
-    ]);
-    ?>
-    
-<div class="btn-row">
-    <a href="add.php" class="btn btn-add">➕ Bauteil hinzufügen</a>
-    <?php
-    $exportParams = http_build_query([
-        'search'   => $_GET['search']   ?? '',
-        'category' => $_GET['category'] ?? '',
-        'location' => $_GET['location'] ?? '',
-    ]);
-    ?>
-    <a href="export.php?<?= htmlspecialchars($exportParams) ?>" class="btn btn-export">⬇️ CSV-Export</a>
-    <a href="import.php" class="btn btn-import">⬆️ CSV-Import</a>
-</div>
+    <div class="btn-row">
+        <a href="add.php" class="btn btn-add">➕ Bauteil hinzufügen</a>
+        <a href="export.php?<?= htmlspecialchars($exportParams) ?>" class="btn btn-export">⬇️ CSV-Export</a>
+        <a href="import.php" class="btn btn-import">⬆️ CSV-Import</a>
+    </div>
 
     <p class="count"><?= count($components) ?> Bauteil(e) gefunden.</p>
 
@@ -195,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </thead>
         <tbody>
             <?php if (empty($components)): ?>
-                <tr><td colspan="8">Keine Bauteile gefunden.</td></tr>
+                <tr><td colspan="9">Keine Bauteile gefunden.</td></tr>
             <?php else: ?>
                 <?php foreach ($components as $c): ?>
                     <tr>
@@ -216,14 +113,50 @@ document.addEventListener('DOMContentLoaded', () => {
                         </td>
                         <td><?= htmlspecialchars($c['location'] ?? '–') ?></td>
                         <td><?= htmlspecialchars($c['notes'] ?? '–') ?></td>
-			<td>
+                        <td>
                             <a href="edit.php?id=<?= (int)$c['id'] ?>">✏️</a>
-			    <a href="delete.php?id=<?= (int)$c['id'] ?>" onclick="return confirm('Wirklich löschen?');">🗑️</a>
+                            <a href="delete.php?id=<?= (int)$c['id'] ?>" onclick="return confirm('Wirklich löschen?');">🗑️</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             <?php endif; ?>
         </tbody>
     </table>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.qty-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const id = btn.dataset.id;
+            const delta = btn.dataset.delta;
+            const span = document.getElementById('qty-' + id);
+
+            btn.disabled = true;
+            try {
+                const res = await fetch('update_qty.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: 'id=' + encodeURIComponent(id) + '&delta=' + encodeURIComponent(delta)
+                });
+                if (!res.ok) {
+                    throw new Error('HTTP ' + res.status);
+                }
+                const data = await res.json();
+                if (data.ok) {
+                    span.textContent = data.quantity;
+                    span.parentElement.classList.toggle('low', data.quantity < 5);
+                } else {
+                    alert('Fehler beim Speichern');
+                }
+            } catch (e) {
+                console.error(e);
+                alert('Fehler: ' + e.message);
+            } finally {
+                btn.disabled = false;
+            }
+        });
+    });
+});
+</script>
 </body>
 </html>
