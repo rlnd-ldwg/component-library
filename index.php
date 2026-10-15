@@ -47,7 +47,9 @@ $exportParams = http_build_query([
 
         .qty-btn { width: 24px; height: 24px; border: 1px solid #ccc; background: #f7f7f7; cursor: pointer; border-radius: 3px; font-weight: bold; }
         .qty-btn:hover { background: #e2e8f0; }
-        .qty-value { display: inline-block; min-width: 2.5em; text-align: center; }
+	.qty-value { display: inline-block; min-width: 2.5em; text-align: center; }
+        .btn-swap { background: #805ad5; }
+        .btn-swap:hover { background: #6b46c1; }
     </style>
 </head>
 <body>
@@ -72,6 +74,7 @@ $exportParams = http_build_query([
         <a href="add.php" class="btn btn-add">➕ Bauteil hinzufügen</a>
         <a href="export.php?<?= htmlspecialchars($exportParams) ?>" class="btn btn-export">⬇️ CSV-Export</a>
         <a href="import.php" class="btn btn-import">⬆️ CSV-Import</a>
+        <a href="swap.php" class="btn btn-swap">🔄 Schubladen tauschen</a>
     </div>
 
     <p class="count"><?= count($components) ?> Bauteil(e) gefunden.</p>
