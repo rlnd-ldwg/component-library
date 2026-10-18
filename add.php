@@ -47,22 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="utf-8">
     <title>Bauteil hinzufügen</title>
-    <style>
-        body { font-family: system-ui, sans-serif; margin: 2rem; background: #f5f5f5; }
-        h1 { color: #333; }
-        form { background: #fff; padding: 1.5rem; border-radius: 6px; max-width: 700px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        label { display: block; margin-top: 0.8rem; font-weight: 600; font-size: 0.9rem; }
-        input, select, textarea { width: 100%; padding: 0.4rem; font-size: 0.95rem; box-sizing: border-box; }
-        textarea { min-height: 60px; }
-        button { margin-top: 1.2rem; padding: 0.6rem 1.2rem; background: #4a5568; color: #fff; border: none; cursor: pointer; font-size: 1rem; }
-        .row { display: flex; gap: 1rem; }
-        .row > div { flex: 1; }
-        .msg-ok { background: #c6f6d5; padding: 0.8rem; border-radius: 4px; margin-bottom: 1rem; }
-        .msg-err { background: #fed7d7; padding: 0.8rem; border-radius: 4px; margin-bottom: 1rem; }
-        a.back { display: inline-block; margin-top: 1rem; }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
+    <?php if (defined('APP_ENV') && APP_ENV === 'test'): ?>
+        <link rel="stylesheet" href="css/theme-test.css">
+    <?php endif; ?>
 </head>
-<body>
+<body class="<?= (defined('APP_ENV') && APP_ENV === 'test') ? 'env-test' : '' ?>">
     <h1>➕ Bauteil hinzufügen</h1>
 
     <?php if ($success): ?>

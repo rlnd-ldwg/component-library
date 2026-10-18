@@ -1,0 +1,19 @@
+/* =========================================
+   TEST-UMGEBUNG (Orange)
+   ========================================= */
+body.env-test::before {
+    content: "⚠️ TESTUMGEBUNG (Daten werden nicht gesichert)";
+    display: block;
+    background: #ed8936; /* Orange */
+    color: #fff;
+    font-weight: bold;
+    padding: 0.8rem 1rem;
+    margin: -2rem -2rem 1.5rem -2rem; /* Balken über die volle Breite ziehen */
+    text-align: center;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+body.env-test h1 {
+    color: #ed8936;
+}

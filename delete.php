@@ -30,18 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['confirm'] ?? '') === 'yes'
 <head>
     <meta charset="utf-8">
     <title>Bauteil löschen</title>
-    <style>
-        body { font-family: system-ui, sans-serif; margin: 2rem; background: #f5f5f5; }
-        h1 { color: #c53030; }
-        .box { background: #fff; padding: 1.5rem; border-radius: 6px; max-width: 600px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .box p { margin: 0.4rem 0; }
-        .actions { margin-top: 1.5rem; display: flex; gap: 1rem; }
-        .btn-danger { background: #c53030; color: #fff; padding: 0.6rem 1.2rem; border: none; cursor: pointer; border-radius: 4px; font-size: 1rem; }
-        .btn-cancel { background: #e2e8f0; color: #333; padding: 0.6rem 1.2rem; text-decoration: none; border-radius: 4px; font-size: 1rem; }
-        .msg-ok { background: #c6f6d5; padding: 0.8rem; border-radius: 4px; margin-bottom: 1rem; }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
+    <?php if (defined('APP_ENV') && APP_ENV === 'test'): ?>
+        <link rel="stylesheet" href="css/theme-test.css">
+    <?php endif; ?>
 </head>
-<body>
+<body class="<?= (defined('APP_ENV') && APP_ENV === 'test') ? 'env-test' : '' ?>">
     <?php if ($deleted): ?>
         <div class="msg-ok">✅ Bauteil wurde gelöscht.</div>
         <p><a href="index.php">← Zurück zur Liste</a></p>

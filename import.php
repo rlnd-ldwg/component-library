@@ -148,26 +148,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv'])) {
 <head>
     <meta charset="utf-8">
     <title>CSV-Import</title>
-    <style>
-        body { font-family: system-ui, sans-serif; margin: 2rem; background: #f5f5f5; }
-        h1 { color: #333; }
-        .box { background: #fff; padding: 1.5rem; border-radius: 6px; max-width: 700px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        label { display: block; margin-top: 0.8rem; font-weight: 600; font-size: 0.9rem; }
-        input[type="file"] { margin-top: 0.4rem; }
-        .radio-row { margin-top: 0.4rem; }
-        .radio-row label { display: inline-block; font-weight: normal; margin-right: 1rem; }
-        button { margin-top: 1.2rem; padding: 0.6rem 1.2rem; background: #2b6cb0; color: #fff; border: none; cursor: pointer; font-size: 1rem; border-radius: 4px; }
-        button:hover { background: #2c5282; }
-        .msg-ok { background: #c6f6d5; padding: 0.8rem; border-radius: 4px; margin-bottom: 1rem; }
-        .msg-err { background: #fed7d7; padding: 0.8rem; border-radius: 4px; margin-bottom: 1rem; }
-        .warn { background: #fefcbf; padding: 0.8rem; border-radius: 4px; margin-bottom: 1rem; border-left: 4px solid #d69e2e; }
-        code { background: #edf2f7; padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.9em; word-break: break-all; }
-        a.back { display: inline-block; margin-top: 1rem; }
-        fieldset { border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.8rem; margin-top: 1rem; }
-        legend { font-weight: 600; padding: 0 0.4rem; }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
+    <?php if (defined('APP_ENV') && APP_ENV === 'test'): ?>
+        <link rel="stylesheet" href="css/theme-test.css">
+    <?php endif; ?>
 </head>
-<body>
+<body class="<?= (defined('APP_ENV') && APP_ENV === 'test') ? 'env-test' : '' ?>">
     <h1>⬆️ CSV-Import</h1>
 
     <?php foreach ($messages as $m): ?>

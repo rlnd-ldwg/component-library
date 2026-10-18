@@ -1,0 +1,191 @@
+/* =========================================
+   Basis & Layout
+   ========================================= */
+body {
+    font-family: system-ui, sans-serif;
+    margin: 2rem;
+    background: #f5f5f5;
+    color: #333;
+}
+h1 { color: #333; margin-bottom: 1rem; }
+h2 { color: #333; margin-top: 1.5rem; font-size: 1.1rem; }
+a { color: #2b6cb0; text-decoration: none; }
+a:hover { text-decoration: underline; }
+a.back { display: inline-block; margin-top: 1rem; }
+
+/* =========================================
+   Boxen & Formulare (Allgemein)
+   ========================================= */
+.box {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 6px;
+    max-width: 900px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 1rem;
+}
+
+/* Nur Formulare, die NICHT in der Toolbar sind, bekommen den weißen Kasten */
+form:not(.filter) { 
+    background: #fff; 
+    padding: 1.5rem; 
+    border-radius: 6px; 
+    max-width: 700px; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+}
+
+label { display: block; margin-top: 0.8rem; font-weight: 600; font-size: 0.9rem; }
+input[type="text"], input[type="number"], select, textarea {
+    width: 100%; padding: 0.5rem; font-size: 0.95rem; box-sizing: border-box;
+    border: 1px solid #ccc; border-radius: 4px; margin-top: 0.2rem;
+}
+textarea { min-height: 60px; }
+input[type="file"] { margin-top: 0.4rem; }
+
+.row { display: flex; gap: 1rem; }
+.row > div { flex: 1; }
+fieldset { border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.8rem 1rem; margin-top: 1rem; }
+legend { font-weight: 600; padding: 0 0.4rem; }
+
+/* =========================================
+   Toolbar (Filter & Buttons)
+   ========================================= */
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    background: #fff;
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 1rem;
+}
+
+.toolbar form.filter {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+    margin: 0;
+    max-width: none;
+}
+
+.toolbar .filter input, 
+.toolbar .filter select {
+    width: auto;
+    min-width: 150px;
+    margin-top: 0;
+}
+
+.toolbar .filter button {
+    margin-top: 0;
+    padding: 0.5rem 1rem;
+    background: #4a5568;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+.toolbar .filter button:hover { background: #2d3748; }
+
+.reset-link {
+    font-size: 0.9rem;
+    color: #666;
+    margin-left: 0.5rem;
+}
+.reset-link:hover { color: #c53030; text-decoration: none; }
+
+.toolbar .btn-row {
+    margin-bottom: 0;
+    margin-left: auto; /* Schiebt die Buttons nach rechts */
+}
+
+/* =========================================
+   Buttons
+   ========================================= */
+.btn {
+    padding: 0.5rem 1rem; color: #fff; text-decoration: none;
+    border-radius: 4px; display: inline-block; line-height: 1.2; font-size: 0.95rem;
+    border: none; cursor: pointer;
+}
+.btn:hover { text-decoration: none; opacity: 0.9; }
+
+.btn-add { background: #38a169; }
+.btn-export { background: #2b6cb0; }
+.btn-import { background: #c53030; }
+.btn-swap { background: #805ad5; }
+.btn-danger { background: #c53030; }
+.btn-cancel { background: #e2e8f0; color: #333; }
+
+.btn-row { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+
+button[type="submit"] { 
+    margin-top: 1.2rem; padding: 0.6rem 1.2rem; background: #4a5568; 
+    color: #fff; border: none; cursor: pointer; font-size: 1rem; border-radius: 4px; 
+}
+button[type="submit"]:hover { background: #2d3748; }
+button.danger { background: #c53030; margin-top: 1.2rem; }
+button.danger:hover { background: #9b2c2c; }
+
+/* =========================================
+   Tabellen & Sticky Header
+   ========================================= */
+table { 
+    border-collapse: separate; /* WICHTIG für Sticky! */
+    border-spacing: 0;
+    width: 100%; 
+    background: #fff; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+    margin-top: 0.6rem; 
+}
+
+th, td { 
+    padding: 0.5rem 0.75rem; 
+    text-align: left; 
+    border-bottom: 1px solid #ddd; 
+    font-size: 0.95rem; 
+}
+
+th { 
+    background: #4a5568; 
+    color: #fff; 
+    position: sticky; 
+    top: 0; 
+    z-index: 10; 
+    border-bottom: 2px solid #2d3748;
+    box-shadow: 0 2px 2px -1px rgba(0,0,0,0.1);
+}
+
+tr:hover { background: #f0f0f0; }
+table.fields th { background: transparent; color: #555; width: 180px; vertical-align: top; position: static; border-bottom: none; box-shadow: none;}
+table.fields td { padding: 0.5rem 0; border-bottom: none; }
+
+/* =========================================
+   Spezifisches
+   ========================================= */
+.count { color: #666; margin-bottom: 1rem; font-weight: 600; }
+.low { color: #c53030; font-weight: bold; }
+.hint { color: #666; font-size: 0.9rem; margin-top: 0.4rem; }
+.meta { color: #888; font-size: 0.85rem; margin-top: 1rem; }
+
+.qty-btn { width: 24px; height: 24px; border: 1px solid #ccc; background: #f7f7f7; cursor: pointer; border-radius: 3px; font-weight: bold; }
+.qty-btn:hover { background: #e2e8f0; }
+.qty-value { display: inline-block; min-width: 2.5em; text-align: center; }
+
+.arrow { color: #888; margin: 0 0.4rem; }
+.new-loc { color: #2b6cb0; font-weight: 600; }
+
+/* =========================================
+   Meldungen
+   ========================================= */
+.msg-ok { background: #c6f6d5; padding: 0.8rem; border-radius: 4px; margin-bottom: 1rem; border-left: 4px solid #38a169; }
+.msg-err { background: #fed7d7; padding: 0.8rem; border-radius: 4px; margin-bottom: 1rem; border-left: 4px solid #c53030; }
+.warn { background: #fefcbf; padding: 0.8rem; border-radius: 4px; margin-bottom: 1rem; border-left: 4px solid #d69e2e; }
+.notes { white-space: pre-wrap; background: #f7fafc; padding: 0.6rem; border-radius: 4px; border: 1px solid #e2e8f0; }
+
+code { background: #edf2f7; padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.9em; word-break: break-all; }

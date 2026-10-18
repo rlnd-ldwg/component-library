@@ -131,34 +131,12 @@ function label($row) {
 <head>
     <meta charset="utf-8">
     <title>Schubladen tauschen</title>
-    <style>
-        body { font-family: system-ui, sans-serif; margin: 2rem; background: #f5f5f5; }
-        h1 { color: #333; }
-        h2 { color: #333; margin-top: 1.5rem; font-size: 1.1rem; }
-        .box { background: #fff; padding: 1.5rem; border-radius: 6px; max-width: 900px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        label { display: block; margin-top: 0.8rem; font-weight: 600; font-size: 0.9rem; }
-        input[type="text"] { width: 100%; padding: 0.5rem; font-size: 0.95rem; box-sizing: border-box; }
-        .row { display: flex; gap: 1rem; }
-        .row > div { flex: 1; }
-        button { margin-top: 1.2rem; padding: 0.6rem 1.2rem; background: #2b6cb0; color: #fff; border: none; cursor: pointer; font-size: 1rem; border-radius: 4px; }
-        button:hover { background: #2c5282; }
-        button.danger { background: #c53030; }
-        button.danger:hover { background: #9b2c2c; }
-        .msg-ok { background: #c6f6d5; padding: 0.8rem; border-radius: 4px; margin-bottom: 1rem; }
-        .msg-err { background: #fed7d7; padding: 0.8rem; border-radius: 4px; margin-bottom: 1rem; }
-        .hint { color: #666; font-size: 0.9rem; margin-top: 0.4rem; }
-        table { border-collapse: collapse; width: 100%; margin-top: 0.6rem; background: #fff; }
-        th, td { padding: 0.4rem 0.6rem; text-align: left; border-bottom: 1px solid #eee; font-size: 0.9rem; }
-        th { background: #edf2f7; }
-        .arrow { color: #888; margin: 0 0.4rem; }
-        .new-loc { color: #2b6cb0; font-weight: 600; }
-        .count { color: #555; margin-top: 0.4rem; }
-        a.back { display: inline-block; margin-top: 1rem; }
-        fieldset { border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.8rem 1rem; margin-top: 1rem; }
-        legend { font-weight: 600; padding: 0 0.4rem; }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
+    <?php if (defined('APP_ENV') && APP_ENV === 'test'): ?>
+        <link rel="stylesheet" href="css/theme-test.css">
+    <?php endif; ?>
 </head>
-<body>
+<body class="<?= (defined('APP_ENV') && APP_ENV === 'test') ? 'env-test' : '' ?>">
     <h1>🔄 Schubladen tauschen</h1>
 
     <?php foreach ($messages as $m): ?>
