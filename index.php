@@ -27,6 +27,8 @@ $exportParams = http_build_query([
     <?php if (defined('APP_ENV') && APP_ENV === 'test'): ?>
         <link rel="stylesheet" href="css/theme-test.css">
     <?php endif; ?>
+    <!-- Standard Favicon (Browser-Tab) -->
+    <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
 </head>
 <body class="<?= (defined('APP_ENV') && APP_ENV === 'test') ? 'env-test' : '' ?>">
     <h1>🔧 Bauteil-Inventar</h1>

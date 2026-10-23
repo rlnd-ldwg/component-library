@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <style>
+    /* LIGHT MODE (Deine Originalfarben) */
+    .clipboard-body { fill: #13294b; }
+    .clipboard-accent { fill: #0e7490; }
+    .clipboard-text { fill: #94a3b8; }
+    .gear-color { fill: #b45309; stroke: #b45309; }
+    .check-mark { stroke: #f1f5f9; }
+    
+    /* DARK MODE (Angepasste Farben für dunkle Tabs) */
+    @media (prefers-color-scheme: dark) {
+      .clipboard-body { fill: #e2e8f0; } /* Helles Grau statt Dunkelblau */
+      .clipboard-accent { fill: #38bdf8; } /* Helles Blau */
+      .clipboard-text { fill: #cbd5e1; }
+      .gear-color { fill: #f6ad55; stroke: #f6ad55; } /* Helles Orange */
+      .check-mark { stroke: #0f172a; } /* Haken werden dunkel, da der Hintergrund hell wird */
+    }
+  </style>
+
+  <!-- Clipboard body -->
+  <rect class="clipboard-body" x="8" y="8" width="40" height="50" rx="5"/>
+  <!-- Clip -->
+  <rect class="clipboard-accent" x="20" y="3" width="16" height="9" rx="3"/>
+  
+  <!-- Row 1 -->
+  <rect class="clipboard-accent" x="14" y="20" width="6" height="6" rx="1"/>
+  <path class="check-mark" d="M15.5 23l1.6 1.6 2.8-3.2" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="clipboard-text" x="24" y="22" width="16" height="2.5" rx="1.2"/>
+  
+  <!-- Row 2 -->
+  <rect class="clipboard-accent" x="14" y="31" width="6" height="6" rx="1"/>
+  <path class="check-mark" d="M15.5 34l1.6 1.6 2.8-3.2" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="clipboard-text" x="24" y="33" width="16" height="2.5" rx="1.2"/>
+  
+  <!-- Row 3 -->
+  <rect class="clipboard-accent" x="14" y="42" width="6" height="6" rx="1"/>
+  <path class="check-mark" d="M15.5 45l1.6 1.6 2.8-3.2" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="clipboard-text" x="24" y="44" width="12" height="2.5" rx="1.2"/>
+  
+  <!-- Gear (amber) -->
+  <circle class="gear-color" cx="48" cy="48" r="8.5"/>
+  <circle class="gear-color" cx="48" cy="48" r="10" fill="none" stroke-width="3" stroke-dasharray="3.6 3.1"/>
+  <circle class="clipboard-body" cx="48" cy="48" r="2.8"/>
+</svg>

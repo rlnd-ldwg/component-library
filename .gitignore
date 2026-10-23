@@ -1,0 +1,20 @@
+# Apple
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# LibreOffice
+# *.ods
+.~lock*
+
+# VS Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/c_cpp_properties.json
+.history/
+*.code-workspace
+
+*.bak
